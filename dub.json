@@ -1,0 +1,9 @@
+{
+	"description": "A minimal D application.",
+	"license": "proprietary",
+	"authors": [
+		"Jan Hoenig"
+	],
+	"copyright": "Copyright © 2019, Jan Hoenig",
+	"name": "bioinformatics"
+}
