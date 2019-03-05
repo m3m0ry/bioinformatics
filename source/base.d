@@ -1,5 +1,7 @@
 module base;
 
+import algo = std.algorithm;
+
 import std.array;
 import std.algorithm : map, joiner;
 import std.uni : toUpper;
@@ -7,11 +9,6 @@ import std.conv : to;
 import std.stdio;
 
 enum Base : byte{A, C, T, G, U}
-
-Base[] fromString(string bases)
-{
-  return bases.map!(fromChar).array();
-}
 
 Base complement(Base base)
 {
@@ -48,21 +45,61 @@ dchar toChar(Base base)
   }
 }
 
-string toString(Base[] bases)
+struct Strand
 {
-  return to!string(bases.map!(toChar));
-}
-
-Base[] fromFile(File file)
-{
-  string line;
   Base[] strand;
-  while ((line = file.readln()) !is null)
-    {
-      strand ~= fromString(line);
-    }
-  return strand;
-}
+  this(Base[] bases)
+  {
+    strand = bases;
+  }
+  this(string bases)
+  {
+    strand = fromString(bases);
+  }
+  this(File file)
+  {
+    string line;
+    while ((line = file.readln()) !is null)
+      {
+        strand ~= fromString(line);
+      }
+  }
+
+  static Base[] fromString(string bases)
+  {
+    return bases.map!(fromChar).array();
+  }
+
+  string toString()
+  {
+    return to!string(strand.map!(toChar));
+  }
+
+  Strand reverse()
+  {
+    auto r = this;
+    algo.reverse(r.strand);
+    return r;
+  }
+
+  Strand complement()
+  {
+    return Strand(strand.map!(complement).array);
+  }
+
+  Strand reverseComplement()
+  {
+    auto r = complement();
+    r.strand = algo.reverse(r.strand);
+    return r;
+  }
+
+  @property auto length() { return strand.length; }
+
+  ref Base opIndex(int i) { return strand[i]; }
+  Base[] opIndex() { return strand[]; }
+
+  @property ulong opDollar() { return strand.length; }
 
 unittest
 {
