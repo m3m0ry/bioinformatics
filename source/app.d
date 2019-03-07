@@ -1,10 +1,13 @@
 import std.stdio;
 
 import base;
+import algorithm;
 
 void main()
 {
-	writeln(Base.sizeof, int.sizeof);
-  auto b = fromString("AGGGTTT");
-  writeln(b.toString);
+  auto b = Strand("TAAACGTGAGAGAAACGTGCTGATTACACTTGTTCGTGTGGTAT");
+  //writeln(patternCount(b, Strand("AAA")));
+  auto a = Strand("TTGTGTC");
+  writeln(frequencyMap(b, 3));
+  writeln(a.reverseComplement());
 }

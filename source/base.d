@@ -47,6 +47,8 @@ dchar toChar(Base base)
 
 struct Strand
 {
+  struct SliceInfo{ size_t start, end; }
+
   Base[] strand;
   this(Base[] bases)
   {
@@ -84,7 +86,7 @@ struct Strand
 
   Strand complement()
   {
-    return Strand(strand.map!(complement).array);
+    return Strand(strand.map!(base.complement).array);
   }
 
   Strand reverseComplement()
@@ -96,10 +98,21 @@ struct Strand
 
   @property auto length() { return strand.length; }
 
-  ref Base opIndex(int i) { return strand[i]; }
+  Strand opCall(size_t start, size_t end){ return Strand(this[start..end]); }
+
+  ref Base opIndex(size_t i) { return strand[i]; }
   Base[] opIndex() { return strand[]; }
+  Base[] opIndex(SliceInfo s) { return strand[s.start .. s.end]; }
+
+  SliceInfo opSlice(size_t dim)(size_t start, size_t end)
+  {
+    return SliceInfo(start, end);
+  }
+
 
   @property ulong opDollar() { return strand.length; }
+
+}
 
 unittest
 {
